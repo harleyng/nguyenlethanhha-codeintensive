@@ -1,9 +1,40 @@
-public class Vector2D {
+package game;
+
+import java.awt.*;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
+
+public class Vector2D extends Image {
     public double x;
     public double y;
 
     public Vector2D() {
         this(0, 0);
+    }
+
+    @Override
+    public int getWidth(ImageObserver observer) {
+        return 0;
+    }
+
+    @Override
+    public int getHeight(ImageObserver observer) {
+        return 0;
+    }
+
+    @Override
+    public ImageProducer getSource() {
+        return null;
+    }
+
+    @Override
+    public Graphics getGraphics() {
+        return null;
+    }
+
+    @Override
+    public Object getProperty(String name, ImageObserver observer) {
+        return null;
     }
 
     public Vector2D(double x, double y) {
