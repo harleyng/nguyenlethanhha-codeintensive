@@ -1,5 +1,8 @@
 package game;
 
+import game.enemy.Enemy;
+import game.player.Player;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -11,29 +14,9 @@ public class GamePanel extends JPanel {
     ArrayList<Enemy> enemies;
 
     public GamePanel() {
-        // backgroundCreate
         background = new Background();
-
-        // playerCreate
+        enemies = new ArrayList<>();
         player = new Player();
-
-        // enemyCreate
-        enemies = new ArrayList<Enemy>();
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        //backgroundDraw
-        background.render(g);
-
-        //playerDraw
-        player.render(g);
-
-        //enemyDraw
-        for (int i = 0; i < enemies.size(); i++) {
-            Enemy enemy = enemies.get(i);
-            enemy.render(g);
-        }
     }
 
     public void gameLoop() {
@@ -50,26 +33,31 @@ public class GamePanel extends JPanel {
     }
 
     private void renderAll() {
-        repaint(); // goi lai ham paint
+        repaint(); // goi lai ham paint()
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        for(int i = 0; i < GameObject.objects.size(); i++) {
+            GameObject object = GameObject.objects.get(i);
+            if(object.active) {
+                object.render(g);
+            }
+        }
     }
 
     private void runAll() {
-        background.run();
-        player.run();
+        for (int i = 0; i < GameObject.objects.size(); i++) {
+            GameObject object = GameObject.objects.get(i);
+            if(object.active) {
+                object.run();
+            }
+        }
         summonEnemies();
-        enemiesRun();
-        }
-
-    private void enemiesRun() {
-        for (int i = 0; i < enemies.size(); i++) {
-            Enemy enemy = enemies.get(i);
-            enemy.run();
-        }
+        System.out.println(GameObject.objects.size());
     }
 
-
     // TODO: remove summonCount
-
     int summonCount;
     int wayCount;
     int enemyCount;
@@ -80,7 +68,8 @@ public class GamePanel extends JPanel {
         if(wayCount > 120) {
             summonCount++;
             if(summonCount > 15) {
-                Enemy enemy = new Enemy();
+//                Enemy enemy = new Enemy();
+                Enemy enemy = GameObject.recycle(Enemy.class);
                 enemy.position.set(enemyX, -100);
                 enemy.velocity.setAngle(Math.PI / 9);
                 enemies.add(enemy);
